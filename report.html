@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pharmacy Expansion Analysis — Riyadh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1a2e;
+  --paper: #faf8f4;
+  --warm: #f5f0e8;
+  --gold: #c8a951;
+  --gold-light: #f5ecd0;
+  --navy: #16213e;
+  --navy-light: #1a2744;
+  --teal: #0f9b8e;
+  --teal-light: #e6f7f5;
+  --coral: #e74c4c;
+  --coral-light: #fde8e8;
+  --slate: #64748b;
+  --border: #e2ddd3;
+  --shadow-sm: 0 1px 3px rgba(26,26,46,.06);
+  --shadow-md: 0 4px 20px rgba(26,26,46,.08);
+  --shadow-lg: 0 12px 40px rgba(26,26,46,.12);
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { font-family: 'DM Serif Display', Georgia, serif; }
+
+/* ─── Layout ─── */
+.container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+
+/* ─── Hero ─── */
+.hero {
+  background: var(--navy);
+  color: #fff;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    45deg, transparent, transparent 40px,
+    rgba(200,169,81,.03) 40px, rgba(200,169,81,.03) 80px
+  );
+}
+.hero-inner {
+  max-width: 1140px; margin: 0 auto; padding: 48px 24px 40px;
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--gold); color: var(--navy);
+  padding: 6px 16px; border-radius: 999px; font-size: 12px;
+  font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.1; margin: 0 0 12px;
+  font-weight: 400;
+}
+.hero h1 em { font-style: normal; color: var(--gold); }
+.hero-sub { opacity: .7; font-size: 15px; font-weight: 400; }
+.hero-stat {
+  text-align: right;
+}
+.hero-stat-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(48px, 8vw, 72px); font-weight: 600;
+  color: var(--gold); line-height: 1;
+}
+.hero-stat-label { font-size: 14px; opacity: .6; margin-top: 4px; }
+
+/* ─── Sticky Nav ─── */
+.sticky-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(250,248,244,.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+}
+.sticky-nav-inner {
+  max-width: 1140px; margin: 0 auto; padding: 0 24px;
+  display: flex; gap: 0; overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.sticky-nav-inner::-webkit-scrollbar { display: none; }
+.nav-link {
+  padding: 14px 18px; font-size: 13px; font-weight: 600;
+  color: var(--slate); text-decoration: none; white-space: nowrap;
+  border-bottom: 2px solid transparent; transition: all .2s;
+}
+.nav-link:hover, .nav-link.active {
+  color: var(--navy); border-bottom-color: var(--gold);
+}
+
+/* ─── Section Headers ─── */
+.section-header {
+  display: flex; align-items: center; gap: 16px;
+  margin: 48px 0 24px; padding-bottom: 12px;
+  border-bottom: 2px solid var(--ink);
+}
+.section-header h2 {
+  font-size: clamp(24px, 3.5vw, 36px); font-weight: 400;
+}
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; font-weight: 600;
+  color: var(--gold); background: var(--gold-light);
+  padding: 4px 12px; border-radius: 4px;
+}
+
+/* ─── Score Ring ─── */
+.score-ring-wrap { display: flex; align-items: center; justify-content: center; }
+.score-ring { position: relative; width: 160px; height: 160px; }
+.score-ring svg { transform: rotate(-90deg); }
+.score-ring-bg { fill: none; stroke: rgba(255,255,255,.15); stroke-width: 10; }
+.score-ring-fill { fill: none; stroke: var(--gold); stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1.5s ease; }
+.score-ring-text {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.score-ring-val { font-family: 'JetBrains Mono', monospace; font-size: 36px; font-weight: 700; }
+.score-ring-label { font-size: 11px; opacity: .6; text-transform: uppercase; letter-spacing: 1px; }
+
+/* ─── Top Rec Card ─── */
+.top-rec {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 20px;
+  padding: 36px;
+  box-shadow: var(--shadow-lg);
+  display: grid;
+  grid-template-columns: 1fr 200px;
+  gap: 32px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.top-rec::after {
+  content: ''; position: absolute; top: -60px; right: -60px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,169,81,.15) 0%, transparent 70%);
+}
+.top-rec-label {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
+  color: var(--gold); font-weight: 700; margin-bottom: 8px;
+}
+.top-rec h3 {
+  font-size: clamp(22px, 3vw, 30px); margin-bottom: 6px; font-weight: 400;
+}
+.top-rec-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px; color: var(--gold); font-weight: 600; margin-top: 12px;
+}
+
+/* ─── KPI Strip ─── */
+.kpi-strip {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1px; background: var(--border); border-radius: var(--radius);
+  overflow: hidden; box-shadow: var(--shadow-sm); margin: 24px 0;
+}
+.kpi-item {
+  background: #fff; padding: 20px; text-align: center;
+}
+.kpi-item-label {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .8px;
+  color: var(--slate); font-weight: 600; margin-bottom: 6px;
+}
+.kpi-item-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px; font-weight: 700; color: var(--ink);
+}
+.kpi-item-badge {
+  display: inline-block; margin-top: 6px;
+  padding: 3px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+}
+.badge-excellent { background: var(--teal-light); color: var(--teal); }
+.badge-good { background: var(--gold-light); color: #9a7b1f; }
+.badge-fair { background: var(--coral-light); color: var(--coral); }
+
+/* ─── Score Breakdown Bar ─── */
+.breakdown-bar {
+  display: flex; height: 8px; border-radius: 999px; overflow: hidden;
+  background: #e8e4dc; margin: 16px 0 12px;
+}
+.breakdown-bar .seg { height: 100%; transition: width .8s ease; }
+.seg-traffic { background: #4a90d9; }
+.seg-demo { background: #56b886; }
+.seg-comp { background: #a87cd4; }
+.seg-health { background: #e8993e; }
+.seg-compl { background: #5bc0c0; }
+
+.breakdown-legend {
+  display: flex; flex-wrap: wrap; gap: 16px;
+}
+.legend-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 500;
+}
+.legend-dot {
+  width: 10px; height: 10px; border-radius: 3px;
+}
+
+/* ─── Metric Cards ─── */
+.metrics-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 16px; margin: 24px 0;
+}
+.metric-card {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px;
+  transition: box-shadow .2s, transform .2s;
+}
+.metric-card:hover {
+  box-shadow: var(--shadow-md); transform: translateY(-2px);
+}
+.metric-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; margin-bottom: 12px;
+}
+.metric-icon.traffic { background: #e8f1fb; }
+.metric-icon.demo { background: #e6f7ef; }
+.metric-icon.comp { background: #f1e8fb; }
+.metric-icon.health { background: #fef3e2; }
+.metric-icon.compl { background: #e2f7f7; }
+.metric-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px; font-weight: 700; margin: 4px 0;
+}
+.metric-label { font-size: 12px; color: var(--slate); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+.metric-desc { font-size: 13px; color: var(--slate); margin-top: 6px; }
+.delta-tag {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 12px; font-weight: 700; padding: 2px 8px;
+  border-radius: 4px; margin-left: 4px;
+}
+.delta-up { background: var(--teal-light); color: var(--teal); }
+.delta-down { background: var(--coral-light); color: var(--coral); }
+
+/* ─── Tables ─── */
+.table-container {
+  overflow-x: auto; margin: 24px 0;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+}
+table { width: 100%; border-collapse: collapse; min-width: 820px; }
+thead { background: var(--warm); }
+thead th {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .8px;
+  color: var(--slate); font-weight: 700; text-align: left;
+  padding: 14px 16px; border-bottom: 2px solid var(--border);
+}
+tbody td {
+  padding: 14px 16px; border-bottom: 1px solid #f0ede6;
+  font-size: 14px;
+}
+tbody tr:hover { background: rgba(200,169,81,.04); }
+tbody tr:last-child td { border-bottom: none; }
+
+.rank-badge {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--navy); color: var(--gold);
+  padding: 3px 10px; border-radius: 6px;
+  font-size: 12px; font-weight: 700;
+}
+.score-inline {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 15px;
+}
+.diff-chip {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 11px; font-weight: 700; padding: 2px 7px;
+  border-radius: 4px; margin-left: 4px;
+}
+.diff-up { background: var(--teal-light); color: var(--teal); }
+.diff-down { background: var(--coral-light); color: var(--coral); }
+.view-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  color: var(--navy); font-weight: 700; font-size: 13px;
+  text-decoration: none; padding: 5px 12px;
+  border: 1px solid var(--border); border-radius: 6px;
+  transition: all .2s;
+}
+.view-btn:hover { background: var(--navy); color: var(--gold); border-color: var(--navy); }
+
+/* ─── Featured Analysis ─── */
+.featured-card {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 16px; padding: 32px;
+  box-shadow: var(--shadow-md);
+}
+.featured-card h3 {
+  font-size: 22px; margin-bottom: 20px; font-weight: 400;
+}
+.featured-tiles {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
+}
+.featured-tile {
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px; text-align: center; background: var(--paper);
+}
+.featured-tile-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px; font-weight: 700; color: var(--ink);
+}
+.featured-tile-label { font-size: 13px; font-weight: 700; color: var(--navy); margin-top: 4px; }
+.featured-tile-sub { font-size: 12px; color: var(--slate); margin-top: 2px; }
+.map-placeholder {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--warm); border: 2px dashed var(--border);
+  color: var(--slate); font-weight: 700; font-size: 14px;
+  min-height: 100px; border-radius: var(--radius);
+}
+
+.callout-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;
+}
+.callout-pos {
+  background: var(--teal-light); border-left: 4px solid var(--teal);
+  padding: 14px 16px; border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 14px; font-weight: 500;
+}
+.callout-warn {
+  background: #fef7e6; border-left: 4px solid var(--gold);
+  padding: 14px 16px; border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 14px; font-weight: 500;
+}
+
+.insights-box {
+  background: var(--warm); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px; margin-top: 20px;
+}
+.insights-box h4 { margin-bottom: 10px; font-size: 16px; }
+.insights-box li { margin: 8px 0; font-size: 14px; line-height: 1.6; }
+
+/* ─── Collapsible Panels ─── */
+.panel {
+  border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; margin: 20px 0; background: #fff;
+}
+.panel-header {
+  width: 100%; padding: 16px 24px; border: none; cursor: pointer;
+  text-align: left; display: flex; justify-content: space-between;
+  align-items: center; font-family: inherit; font-size: 15px;
+  font-weight: 600; background: var(--warm); color: var(--ink);
+  transition: background .2s;
+}
+.panel-header:hover { background: #ede8dc; }
+.panel-header .arrow {
+  width: 24px; height: 24px; border-radius: 50%; background: var(--navy);
+  color: var(--gold); display: flex; align-items: center; justify-content: center;
+  font-size: 12px; transition: transform .3s;
+}
+.panel-header.open .arrow { transform: rotate(180deg); }
+.panel-body { display: none; padding: 24px; }
+.panel-body.open { display: block; }
+
+/* Field rows */
+.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
+.field-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid #f0ede6;
+}
+.field-label { font-size: 13px; color: var(--slate); font-weight: 500; }
+.field-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; font-weight: 600; color: var(--ink);
+}
+.field-section {
+  font-size: 13px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--gold); margin: 20px 0 8px;
+  grid-column: 1 / -1;
+}
+
+/* Market Research Channel Cards */
+.channel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 16px 0; }
+.channel-card { background: var(--paper); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+.channel-card h4 { font-size: 16px; margin-bottom: 12px; font-weight: 400; }
+.channel-metric { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0ede6; font-size: 14px; }
+.channel-metric:last-child { border: none; }
+.insight-callout {
+  padding: 14px 16px; background: var(--teal-light); border-left: 4px solid var(--teal);
+  border-radius: 0 8px 8px 0; margin-top: 12px; font-size: 13px; line-height: 1.6;
+}
+
+/* ─── Appendix ─── */
+.appendix-header {
+  background: var(--ink); color: #fff;
+  padding: 28px 32px; border-radius: 16px;
+  margin: 48px 0 24px;
+}
+.appendix-header h2 { font-size: clamp(22px, 3vw, 30px); font-weight: 400; }
+.appendix-header p { color: var(--gold); font-size: 14px; margin-top: 4px; font-weight: 500; }
+
+details {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 20px; margin: 10px 0;
+}
+details summary {
+  cursor: pointer; font-weight: 700; font-size: 14px;
+  padding: 4px 0; color: var(--navy);
+}
+details[open] summary { margin-bottom: 8px; }
+details ul { margin: 0 0 0 18px; }
+details li { margin: 6px 0; font-size: 14px; color: var(--slate); }
+
+.formula-box {
+  background: var(--warm); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 20px; margin: 20px 0;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  font-weight: 600; color: var(--navy);
+}
+
+/* ─── Property Deep Dives ─── */
+.prop-card {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px;
+  margin: 16px 0; box-shadow: var(--shadow-sm);
+  transition: box-shadow .2s;
+}
+.prop-card:hover { box-shadow: var(--shadow-md); }
+.prop-card-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+}
+.prop-card-header h3 { font-size: 18px; font-weight: 400; }
+.prop-score {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--navy); color: var(--gold);
+  padding: 6px 14px; border-radius: 8px;
+  font-size: 14px; font-weight: 700;
+}
+.prop-grid {
+  display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 16px;
+}
+.prop-section h4 {
+  font-size: 12px; text-transform: uppercase; letter-spacing: .8px;
+  color: var(--gold); font-weight: 700; margin-bottom: 8px;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.prop-section div { font-size: 14px; line-height: 1.7; }
+
+/* ─── Footer ─── */
+.footer {
+  text-align: center; color: var(--slate); font-size: 13px;
+  margin-top: 48px; padding: 28px;
+  border-top: 2px solid var(--ink);
+}
+.footer-brand { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--ink); margin-bottom: 4px; }
+
+/* ─── Responsive ─── */
+@media (max-width: 980px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-stat { text-align: left; }
+  .top-rec { grid-template-columns: 1fr; }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  .prop-grid { grid-template-columns: 1fr 1fr; }
+  .callout-grid { grid-template-columns: 1fr; }
+  .channel-grid { grid-template-columns: 1fr; }
+  .field-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .hero-inner { padding: 32px 20px; }
+  .metrics-grid { grid-template-columns: 1fr; }
+  .prop-grid { grid-template-columns: 1fr; }
+  .kpi-strip { grid-template-columns: 1fr 1fr; }
+  .featured-tiles { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 400px) {
+  .kpi-strip { grid-template-columns: 1fr; }
+  .featured-tiles { grid-template-columns: 1fr; }
+}
+
+@media print {
+  .sticky-nav { display: none; }
+  .panel-body { display: block !important; }
+  body { background: #fff; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">📍 Premium Analysis</div>
+      <h1>Pharmacy Expansion<br><em>Riyadh</em></h1>
+      <div class="hero-sub">Delivery (50%) + In-Store (50%) balanced assessment · Generated October 2024</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">566</div>
+      <div class="hero-stat-label">Properties Analyzed</div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════ STICKY NAV ═══════════════ -->
+<nav class="sticky-nav">
+  <div class="sticky-nav-inner">
+    <a class="nav-link active" href="#summary">Summary</a>
+    <a class="nav-link" href="#rankings">Rankings</a>
+    <a class="nav-link" href="#featured">Featured</a>
+    <a class="nav-link" href="#parameters">Parameters</a>
+    <a class="nav-link" href="#market">Market Research</a>
+    <a class="nav-link" href="#methodology">Methodology</a>
+    <a class="nav-link" href="#deep-dives">Deep Dives</a>
+  </div>
+</nav>
+
+<main class="container">
+
+  <!-- ═══════════════ CUSTOMER REQUEST PARAMETERS ═══════════════ -->
+  <div id="parameters">
+    <div class="panel" style="margin-top: 32px;">
+      <button class="panel-header" onclick="togglePanel(this)">
+        <span>⚙️ Customer Request Parameters</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="panel-body">
+        <div class="field-grid">
+          <div class="field-section">📍 Location & Business</div>
+          <div class="field-item"><span class="field-label">City</span><span class="field-value">Riyadh</span></div>
+          <div class="field-item"><span class="field-label">Country</span><span class="field-value">Saudi Arabia</span></div>
+          <div class="field-item"><span class="field-label">Business Type</span><span class="field-value">Pharmacy</span></div>
+          <div class="field-item"><span class="field-label">Report Tier</span><span class="field-value">Premium</span></div>
+
+          <div class="field-section">👥 Target Audience</div>
+          <div class="field-item"><span class="field-label">Target Income</span><span class="field-value">Medium</span></div>
+          <div class="field-item"><span class="field-label">Target Age</span><span class="field-value">30 years</span></div>
+
+          <div class="field-section">📏 Analysis Zones</div>
+          <div class="field-item"><span class="field-label">Walking Distance</span><span class="field-value">500 m</span></div>
+          <div class="field-item"><span class="field-label">Peak Zone 1</span><span class="field-value">10 min</span></div>
+          <div class="field-item"><span class="field-label">Off-Peak Zone 1</span><span class="field-value">10 min</span></div>
+          <div class="field-item"><span class="field-label">Peak Zone 2</span><span class="field-value">15 min</span></div>
+          <div class="field-item"><span class="field-label">Peak Zone 3</span><span class="field-value">25 min</span></div>
+
+          <div class="field-section">⚖️ Scoring Weights</div>
+          <div class="field-item"><span class="field-label">Delivery Weight</span><span class="field-value">0.50 (50%)</span></div>
+          <div class="field-item"><span class="field-label">In-Store Weight</span><span class="field-value">0.50 (50%)</span></div>
+
+          <div class="field-section">🚚 Delivery Parameters</div>
+          <div class="field-item"><span class="field-label">Driver Salary</span><span class="field-value">50.0 SAR/h</span></div>
+          <div class="field-item"><span class="field-label">Fuel Cost</span><span class="field-value">0.50 SAR/km</span></div>
+          <div class="field-item"><span class="field-label">Expected Orders</span><span class="field-value">100/day</span></div>
+
+          <div class="field-section">🏷️ Business Categories</div>
+          <div class="field-item"><span class="field-label">Competition</span><span class="field-value">pharmacy</span></div>
+          <div class="field-item"><span class="field-label">Complementary</span><span class="field-value">hospital</span></div>
+          <div class="field-item"><span class="field-label">Cross-Shopping</span><span class="field-value">grocery_store</span></div>
+
+          <div class="field-section">🕐 Analysis Times</div>
+          <div class="field-item"><span class="field-label">Peak Time</span><span class="field-value">2025-12-06 10:00 PM</span></div>
+          <div class="field-item"><span class="field-label">Off-Peak Time</span><span class="field-value">2025-12-10 10:00 AM</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ MARKET RESEARCH ═══════════════ -->
+  <div id="market">
+    <div class="panel">
+      <button class="panel-header" onclick="togglePanel(this)">
+        <span>📊 Market Research: Pharmacy Sector in Saudi Arabia</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="panel-body">
+        <div class="insight-callout" style="margin-bottom:20px">
+          <strong>💡 Market Overview:</strong> Pharmacy sector shows high delivery AOV despite low frequency. Your business is <strong>balanced between delivery and in-store</strong> in <strong>Riyadh</strong> (Highest per capita spend, 1.6x intensity). Your balanced approach allows you to capture both in-store frequency (14.2/year) and delivery AOV (SAR 195).
+        </div>
+
+        <div class="channel-grid">
+          <div class="channel-card">
+            <h4>🏪 In-Store</h4>
+            <div class="channel-metric"><span>Frequency:</span><strong>14.2 visits/capita/year</strong></div>
+            <div class="channel-metric"><span>Adjusted for Riyadh:</span><strong>22.7 visits/capita/year</strong></div>
+            <div class="channel-metric"><span>Avg Order Value:</span><strong>SAR 85</strong></div>
+            <div class="insight-callout">
+              <strong>Key Insight:</strong> Remains high-frequency due to immediate medication needs and pharmacist as frontline health advisor.
+            </div>
+          </div>
+          <div class="channel-card">
+            <h4>🚚 Delivery</h4>
+            <div class="channel-metric"><span>Frequency:</span><strong>0.6 orders/capita/year</strong></div>
+            <div class="channel-metric"><span>Adjusted for Riyadh:</span><strong>1.0 orders/capita/year</strong></div>
+            <div class="channel-metric"><span>Avg Order Value:</span><strong>SAR 195</strong></div>
+            <div class="insight-callout">
+              <strong>Key Insight:</strong> Very low per capita frequency but highest delivery AOV (SAR 195). Users primarily use delivery for high-value skincare, vitamins, and bulk chronic medication refills.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;padding:16px;background:var(--warm);border-radius:var(--radius)">
+          <h4 style="margin:0 0 10px;font-family:'DM Serif Display',serif;font-weight:400">Strategic Implications</h4>
+          <ul style="margin:0;padding-left:20px;font-size:14px;color:var(--slate)">
+            <li><strong>Market Position:</strong> Riyadh operates at 1.6x national average intensity</li>
+            <li><strong>Channel Strategy:</strong> Balanced approach aligns with pharmacy sector dynamics</li>
+            <li><strong>Revenue Potential:</strong> Delivery offers higher AOV (SAR 195) vs in-store (SAR 85)</li>
+            <li><strong>Customer Base:</strong> Expected 22.7 in-store visits and 1.0 delivery orders per capita annually</li>
+          </ul>
+        </div>
+
+        <p style="margin-top:16px;font-size:12px;color:var(--slate);padding:12px;background:var(--warm);border-radius:8px">
+          <em>Sources: Measurable AI (2024/25), GASTAT Healthcare Statistics 2024. All data represents Saudi national averages adjusted for regional intensity.</em>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ EXECUTIVE SUMMARY ═══════════════ -->
+  <div id="summary">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Executive Summary</h2>
+    </div>
+
+    <p style="font-size:15px;line-height:1.8;color:var(--slate);max-width:800px;margin-bottom:28px">
+      We analyzed <strong style="color:var(--ink)">566 potential locations</strong> across <strong style="color:var(--ink)">Riyadh</strong>, evaluating local demographics, competitor density, healthcare proximity, and traffic patterns. The top location scored <strong style="color:var(--ink)">65.9/100</strong> with <strong style="color:var(--ink)">strong delivery potential</strong> and an ROI score of <strong style="color:var(--ink)">100.00</strong>.
+    </p>
+
+    <!-- Top Recommendation -->
+    <div class="top-rec">
+      <div>
+        <div class="top-rec-label">🏆 Top Recommendation</div>
+        <h3>Your current location</h3>
+        <div style="font-size:14px;opacity:.7;margin-top:4px">Property #1 — Riyadh</div>
+        <div class="top-rec-price">Investment: 200,000 SAR</div>
+      </div>
+      <div class="score-ring-wrap">
+        <div class="score-ring">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle class="score-ring-bg" cx="80" cy="80" r="65" />
+            <circle class="score-ring-fill" cx="80" cy="80" r="65"
+              stroke-dasharray="408.4" stroke-dashoffset="139" />
+          </svg>
+          <div class="score-ring-text" style="color:#fff">
+            <div class="score-ring-val">65.9</div>
+            <div class="score-ring-label">of 100</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Business KPIs -->
+    <div style="margin-top:28px">
+      <h3 style="font-size:18px;font-weight:400;margin-bottom:4px">Business KPIs</h3>
+      <div class="kpi-strip">
+        <div class="kpi-item">
+          <div class="kpi-item-label">ROI Score</div>
+          <div class="kpi-item-val">100.0</div>
+          <div class="kpi-item-badge badge-excellent">Excellent</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-item-label">Demand Score</div>
+          <div class="kpi-item-val">30.0</div>
+          <div class="kpi-item-badge badge-fair">Fair</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-item-label">Efficiency</div>
+          <div class="kpi-item-val">85.0</div>
+          <div class="kpi-item-badge badge-excellent">Excellent</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Location KPIs -->
+    <div style="margin-top:16px">
+      <h3 style="font-size:18px;font-weight:400;margin-bottom:4px">Location KPIs</h3>
+      <div class="kpi-strip">
+        <div class="kpi-item">
+          <div class="kpi-item-label">Overall Location</div>
+          <div class="kpi-item-val">65.9</div>
+          <div class="kpi-item-badge badge-good">Good</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-item-label">🚚 Delivery</div>
+          <div class="kpi-item-val">67.4</div>
+          <div class="kpi-item-badge badge-good">Good</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-item-label">🏪 In-Store</div>
+          <div class="kpi-item-val">64.4</div>
+          <div class="kpi-item-badge badge-good">Good</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Score Breakdown -->
+    <div style="margin-top:24px">
+      <h3 style="font-size:18px;font-weight:400;margin-bottom:4px">Final Score Breakdown</h3>
+      <div class="breakdown-bar">
+        <div class="seg seg-traffic" style="width:14%"></div>
+        <div class="seg seg-demo" style="width:35.6%"></div>
+        <div class="seg seg-comp" style="width:17.7%"></div>
+        <div class="seg seg-health" style="width:20.3%"></div>
+        <div class="seg seg-compl" style="width:12.2%"></div>
+      </div>
+      <div class="breakdown-legend">
+        <div class="legend-item"><div class="legend-dot seg-traffic" style="background:#4a90d9"></div>Traffic 25% → <strong>10.0</strong></div>
+        <div class="legend-item"><div class="legend-dot" style="background:#56b886"></div>Demographics 30% → <strong>25.4</strong></div>
+        <div class="legend-item"><div class="legend-dot" style="background:#a87cd4"></div>Competition 15% → <strong>12.6</strong></div>
+        <div class="legend-item"><div class="legend-dot" style="background:#e8993e"></div>Healthcare 20% → <strong>14.5</strong></div>
+        <div class="legend-item"><div class="legend-dot" style="background:#5bc0c0"></div>Complementary 10% → <strong>8.7</strong></div>
+        <div class="legend-item" style="font-weight:700">Total = 71.2</div>
+      </div>
+    </div>
+
+    <!-- Metrics Grid -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-icon traffic">🚗</div>
+        <div class="metric-label">Traffic</div>
+        <div class="metric-val">40.0</div>
+        <div class="metric-desc">~50 km/h; invest in fascia/window branding.</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon demo">👥</div>
+        <div class="metric-label">Demographics</div>
+        <div class="metric-val">84.6 <span class="delta-tag delta-up">▲ +21.6</span></div>
+        <div class="metric-desc">Strong age/income match.</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon comp">⚖️</div>
+        <div class="metric-label">Competition</div>
+        <div class="metric-val">84.3 <span class="delta-tag delta-up">▲ +19.1</span></div>
+        <div class="metric-desc">~6 pharmacies nearby — room to gain share.</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon health">🏥</div>
+        <div class="metric-label">Healthcare</div>
+        <div class="metric-val">72.3 <span class="delta-tag delta-up">▲ +72.3</span></div>
+        <div class="metric-desc">Proximity to providers supports referrals.</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon compl">🏬</div>
+        <div class="metric-label">Complementary</div>
+        <div class="metric-val">87.3 <span class="delta-tag delta-up">▲ +10.2</span></div>
+        <div class="metric-desc">29 businesses; partnerships & local marketing.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ RANKINGS ═══════════════ -->
+  <div id="rankings">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Rankings</h2>
+    </div>
+
+    <h3 style="font-size:18px;font-weight:400;margin-bottom:8px">📍 Current Location</h3>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr><th>Rank</th><th>Site Name</th><th>Rent (SAR)</th><th>Final Score</th><th>Traffic</th><th>Demo</th><th>Competition</th><th>Healthcare</th><th>Complementary</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="rank-badge">#576</span></td>
+            <td><strong>Your current location</strong></td>
+            <td>N/A</td>
+            <td><span class="score-inline">46.4</span></td>
+            <td>40.0</td><td>63.0</td><td>65.2</td><td>0.0</td><td>77.1</td>
+            <td><a class="view-btn" href="#deep-current">View →</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:18px;font-weight:400;margin:24px 0 8px">📈 Top 10</h3>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr><th>Rank</th><th>Site Name</th><th>Price (SAR)</th><th>Final Score</th><th>Traffic</th><th>Demo</th><th>Competition</th><th>Healthcare</th><th>Complementary</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="rank-badge">#1</span></td>
+            <td>شارع عنترة بن شداد حي النهضة</td><td>90,000</td>
+            <td><span class="score-inline">71.2</span> <span class="diff-chip diff-up">+24.8</span></td>
+            <td>40.0</td>
+            <td>84.6 <span class="diff-chip diff-up">+21.6</span></td>
+            <td>84.3 <span class="diff-chip diff-up">+19.1</span></td>
+            <td>72.3 <span class="diff-chip diff-up">+72.3</span></td>
+            <td>87.3 <span class="diff-chip diff-up">+10.2</span></td>
+            <td><a class="view-btn" href="#deep-1">View →</a></td>
+          </tr>
+          <tr>
+            <td><span class="rank-badge">#2</span></td>
+            <td>شارع سلمان الفارسي حي النهضة</td><td>70,000</td>
+            <td><span class="score-inline">71.1</span> <span class="diff-chip diff-up">+24.7</span></td>
+            <td>40.0</td>
+            <td>83.6 <span class="diff-chip diff-up">+20.6</span></td>
+            <td>82.3 <span class="diff-chip diff-up">+17.1</span></td>
+            <td>73.8 <span class="diff-chip diff-up">+73.8</span></td>
+            <td>89.1 <span class="diff-chip diff-up">+12.0</span></td>
+            <td><a class="view-btn" href="#deep-2">View →</a></td>
+          </tr>
+          <tr>
+            <td><span class="rank-badge">#3</span></td>
+            <td>شارع النفل حي اشبيلية</td><td>350,000</td>
+            <td><span class="score-inline">70.5</span> <span class="diff-chip diff-up">+24.1</span></td>
+            <td>40.0</td>
+            <td>85.8 <span class="diff-chip diff-up">+22.8</span></td>
+            <td>65.2 <span class="diff-chip diff-down">▼ 5.2</span></td>
+            <td>81.0 <span class="diff-chip diff-up">+81.0</span></td>
+            <td>87.6 <span class="diff-chip diff-up">+10.5</span></td>
+            <td><a class="view-btn" href="#deep-3">View →</a></td>
+          </tr>
+          <tr>
+            <td><span class="rank-badge">#4</span></td>
+            <td>طريق الثمامة حي الياسمين</td><td>633,100</td>
+            <td><span class="score-inline">69.2</span> <span class="diff-chip diff-up">+22.8</span></td>
+            <td>40.0</td>
+            <td>84.5 <span class="diff-chip diff-up">+21.5</span></td>
+            <td>72.4 <span class="diff-chip diff-up">+7.2</span></td>
+            <td>70.8 <span class="diff-chip diff-up">+70.8</span></td>
+            <td>88.3 <span class="diff-chip diff-up">+11.2</span></td>
+            <td><a class="view-btn" href="#deep-4">View →</a></td>
+          </tr>
+          <tr>
+            <td><span class="rank-badge">#5</span></td>
+            <td>عبدالله بن سعود حي اشبيلية</td><td>199,000</td>
+            <td><span class="score-inline">69.0</span> <span class="diff-chip diff-up">+22.6</span></td>
+            <td>40.0</td>
+            <td>86.5 <span class="diff-chip diff-up">+23.5</span></td>
+            <td>70.4 <span class="diff-chip diff-up">+5.2</span></td>
+            <td>76.1 <span class="diff-chip diff-up">+76.1</span></td>
+            <td>72.9 <span class="diff-chip diff-down">▼ 4.2</span></td>
+            <td><a class="view-btn" href="#deep-5">View →</a></td>
+          </tr>
+          <tr>
+            <td><span class="rank-badge">#6</span></td>
+            <td>الملك عبدالعزيز حي الصحافة</td><td>612,000</td>
+            <td><span class="score-inline">68.7</span> <span class="diff-chip diff-up">+22.3</span></td>
+            <td>40.0</td>
+            <td>87.2 <span class="diff-chip diff-up">+24.2</span></td>
+            <td>62.0 <span class="diff-chip diff-down">▼ 3.2</span></td>
+            <td>72.0 <span class="diff-chip diff-up">+72.0</span></td>
+            <td>88.7 <span class="diff-chip diff-up">+11.6</span></td>
+            <td><a class="view-btn" href="#deep-6">View →</a></td>
+          </tr>
+          <tr>
+            <td><span class="rank-badge">#7</span></td>
+            <td>الأمير سلمان بن محمد حي الصحافة</td><td>800,000</td>
+            <td><span class="score-inline">67.8</span> <span class="diff-chip diff-up">+21.4</span></td>
+            <td>40.0</td>
+            <td>87.1 <span class="diff-chip diff-up">+24.1</span></td>
+            <td>60.1 <span class="diff-chip diff-down">▼ 5.1</span></td>
+            <td>68.7 <span class="diff-chip diff-up">+68.7</span></td>
+            <td>89.6 <span class="diff-chip diff-up">+12.5</span></td>
+            <td><a class="view-btn" href="#deep-7">View →</a></td>
+          </tr>
+          <tr>
+            <td><span class="rank-badge">#8</span></td>
+            <td>النجاح حي اشبيلية</td><td>50,000</td>
+            <td><span class="score-inline">67.8</span> <span class="diff-chip diff-up">+21.4</span></td>
+            <td>40.0</td>
+            <td>86.5 <span class="diff-chip diff-up">+23.5</span></td>
+            <td>56.3 <span class="diff-chip diff-down">▼ 8.9</span></td>
+            <td>69.3 <span class="diff-chip diff-up">+69.3</span></td>
+            <td>94.8 <span class="diff-chip diff-up">+17.7</span></td>
+            <td><a class="view-btn" href="#deep-8">View →</a></td>
+          </tr>
+          <tr>
+            <td><span class="rank-badge">#9</span></td>
+            <td>طريق عثمان بن عفان الفرعي حي الازدهار</td><td>250,000</td>
+            <td><span class="score-inline">67.4</span></td>
+            <td>40.0</td><td>87.1</td><td>59.2</td><td>70.0</td><td>90.4</td>
+            <td><a class="view-btn" href="#deep-9">View →</a></td>
+          </tr>
+          <tr>
+            <td><span class="rank-badge">#10</span></td>
+            <td>الأمير ناصر بن فرحان آل سعود حي الملك سلمان</td><td>500,000</td>
+            <td><span class="score-inline">67.2</span></td>
+            <td>40.0</td><td>85.9</td><td>62.7</td><td>69.1</td><td>92.1</td>
+            <td><a class="view-btn" href="#deep-10">View →</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════ FEATURED PROPERTY ═══════════════ -->
+  <div id="featured">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Featured Property Analysis</h2>
+    </div>
+
+    <div class="featured-card">
+      <h3>#1 — شارع عنترة بن شداد، حي النهضة</h3>
+      <div class="featured-tiles">
+        <div class="featured-tile">
+          <div class="featured-tile-val">40.0</div>
+          <div class="featured-tile-label">Traffic</div>
+          <div class="featured-tile-sub">Avg speed ~50 km/h</div>
+        </div>
+        <div class="featured-tile">
+          <div class="featured-tile-val">87.3 <span class="diff-chip diff-up" style="font-size:11px">▲ 10.2</span></div>
+          <div class="featured-tile-label">Complementary</div>
+          <div class="featured-tile-sub">29 businesses nearby</div>
+        </div>
+        <div class="featured-tile">
+          <div class="featured-tile-val">84.6 <span class="diff-chip diff-up" style="font-size:11px">▲ 21.6</span></div>
+          <div class="featured-tile-label">Demographics</div>
+          <div class="featured-tile-sub">Age 35–50, stable income</div>
+        </div>
+        <div class="featured-tile">
+          <div class="featured-tile-val">84.3 <span class="diff-chip diff-up" style="font-size:11px">▲ 19.1</span></div>
+          <div class="featured-tile-label">Competition</div>
+          <div class="featured-tile-sub">6 pharmacies</div>
+        </div>
+        <div class="featured-tile">
+          <div class="featured-tile-val">72.3 <span class="diff-chip diff-up" style="font-size:11px">▲ 72.3</span></div>
+          <div class="featured-tile-label">Healthcare</div>
+          <div class="featured-tile-sub">Good access to clinics</div>
+        </div>
+        <div class="featured-tile map-placeholder">
+          <strong>📍 Site Location Map</strong>
+        </div>
+      </div>
+
+      <div class="callout-grid">
+        <div class="callout-pos">✅ Demographic fit supports higher loyalty and larger average basket.</div>
+        <div class="callout-warn">⚠️ Traffic visibility is moderate; invest in fascia signage and clear window branding.</div>
+        <div class="callout-pos">✅ Competition level suggests room to build market share quickly.</div>
+        <div class="callout-warn">⚠️ Ecosystem is modest (29 businesses); partner with clinics and run local promotions.</div>
+      </div>
+    </div>
+
+    <div class="insights-box">
+      <h4 style="font-family:'DM Serif Display',serif;font-weight:400">Strategic Insights</h4>
+      <ul style="margin:0;padding-left:20px">
+        <li><strong>Cluster strategy:</strong> Al Nahda and Ishbiliyiah consistently lead — open first two sites here, then expand to Al Sahaf.</li>
+        <li><strong>Brand visibility:</strong> Traffic scores are flat; prioritize signage, storefront lighting, and partnerships to generate awareness.</li>
+        <li><strong>Demand fit:</strong> Demographic alignment is a core advantage — households aged 35–50 with stable income drive daily demand.</li>
+        <li><strong>Portfolio mix:</strong> Balance a low-entry-cost site (≤100k SAR) with a premium corridor (≥600k SAR) to hedge risk.</li>
+        <li><strong>Operating playbook:</strong> Delivery, WhatsApp refills, and clinic tie-ins offset thinner ecosystems and accelerate ramp-up.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════ METHODOLOGY ═══════════════ -->
+  <div id="methodology">
+    <div class="appendix-header">
+      <h2>Technical Appendix</h2>
+      <p>Detailed methodology, property deep dives, and visuals</p>
+    </div>
+
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Analysis Methodology</h2>
+    </div>
+
+    <p style="font-size:14px;line-height:1.8;color:var(--slate);margin-bottom:20px;max-width:800px">
+      This analysis streamlines the process of site selection for pharmacies by leveraging advanced data aggregation
+      and scoring methodologies. Locations are assessed using five key criteria: traffic, demographics, competition,
+      healthcare ecosystem, and complementary businesses.
+    </p>
+
+    <details open>
+      <summary>🚦 Traffic Analysis (25%) — Accessibility and visibility</summary>
+      <ul>
+        <li><strong>Method:</strong> Real-time traffic flow analysis within a 500m radius.</li>
+        <li><strong>Scoring:</strong> Slower average speeds (≤40 km/h) score higher.</li>
+        <li><strong>Rationale:</strong> Lower speeds improve visibility, parking, and impulse visits.</li>
+      </ul>
+    </details>
+    <details>
+      <summary>👥 Demographics (30%) — Market fit and target audience</summary>
+      <ul>
+        <li>Spatial analysis for age, income, and household characteristics.</li>
+        <li>Higher scores for locations matching the target age & income profile.</li>
+      </ul>
+    </details>
+    <details>
+      <summary>🏪 Competition (15%) — Market saturation and opportunity</summary>
+      <ul>
+        <li>Competitive mapping within the analysis radius.</li>
+        <li>Higher scores for locations with fewer competitors nearby.</li>
+      </ul>
+    </details>
+    <details>
+      <summary>🏥 Healthcare Ecosystem (20%) — Proximity to providers</summary>
+      <ul>
+        <li>Higher scores for closer and more accessible providers (≤1500m preferred).</li>
+      </ul>
+    </details>
+    <details>
+      <summary>🏬 Complementary Businesses (10%) — Amenities & brand positioning</summary>
+      <ul>
+        <li>Proximity-based scoring within 1000m to nearby businesses and amenities.</li>
+      </ul>
+    </details>
+
+    <div class="formula-box">🧮 Final Score = (Traffic × 0.25) + (Demographics × 0.30) + (Competition × 0.15) + (Healthcare × 0.20) + (Complementary × 0.10)</div>
+
+    <div class="section-header" style="margin-top:32px">
+      <span class="section-num">05</span>
+      <h2>Statistical Analysis</h2>
+    </div>
+    <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+      <ul style="margin:0;padding-left:20px;font-size:14px;color:var(--slate)">
+        <li><strong>Score spread:</strong> 34.4 to 71.2 (IQR: 66–70).</li>
+        <li><strong>Top driver:</strong> Demographic fit explains ~38% of score variance.</li>
+        <li><strong>Cost bands:</strong> 70–120k SAR band yields best score-to-price ratio.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PROPERTY DEEP DIVES ═══════════════ -->
+  <div id="deep-dives">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Top 10 — Property Deep Dives</h2>
+    </div>
+
+    <div class="prop-card" id="deep-1">
+      <div class="prop-card-header">
+        <h3>#1 عنترة بن شداد — النهضة — الرياض</h3>
+        <span class="prop-score">71.2 / 100</span>
+      </div>
+      <div class="prop-grid">
+        <div class="prop-section">
+          <h4>📍 Property Details</h4>
+          <div>Price: <strong>90,000 SAR</strong></div>
+          <div>Coordinates: 24.758690, 46.810760</div>
+          <div>Category: Shop For Rent</div>
+          <div>Listing: <a class="view-btn" href="#" style="display:inline">View Property</a></div>
+        </div>
+        <div class="prop-section">
+          <h4>🎯 Performance</h4>
+          <div>Traffic: 50.0 km/h</div>
+          <div>Business: 29 nearby</div>
+          <div>Demographics: Age 35–50</div>
+          <div>Competition: 6 pharmacies</div>
+        </div>
+        <div class="prop-section">
+          <h4>📊 Analysis</h4>
+          <div>🚗 Light traffic — smooth access; lower exposure.</div>
+          <div>🏪 Moderate ecosystem — partnerships recommended.</div>
+          <div>👥 Strong alignment with demand.</div>
+          <div>☕ Underserved market — strong opportunity.</div>
+        </div>
+        <div class="prop-section">
+          <div class="map-placeholder" style="height:100%">📍 Site Location Map</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prop-card" id="deep-2">
+      <div class="prop-card-header">
+        <h3>#2 سلمان الفارسي — النهضة — الرياض</h3>
+        <span class="prop-score">71.1 / 100</span>
+      </div>
+      <div class="prop-grid">
+        <div class="prop-section">
+          <h4>📍 Property Details</h4>
+          <div>Price: <strong>70,000 SAR</strong></div>
+          <div>Coordinates: 24.761347, 46.812031</div>
+          <div>Category: Shop For Rent</div>
+          <div>Listing: <a class="view-btn" href="#" style="display:inline">View Property</a></div>
+        </div>
+        <div class="prop-section">
+          <h4>🎯 Performance</h4>
+          <div>Traffic: 50.0 km/h</div>
+          <div>Business: 36 nearby</div>
+          <div>Demographics: N/A</div>
+          <div>Competition: 11 pharmacies</div>
+        </div>
+        <div class="prop-section">
+          <h4>📊 Analysis</h4>
+          <div>🚗 Light traffic — smooth access; lower exposure.</div>
+          <div>🏪 Weak ecosystem — may reduce visibility.</div>
+          <div>👥 Alignment with demand.</div>
+          <div>☕ Underserved market; strong entry opportunity.</div>
+        </div>
+        <div class="prop-section">
+          <div class="map-placeholder" style="height:100%">📍 Site Location Map</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prop-card" id="deep-3">
+      <div class="prop-card-header">
+        <h3>#3 النفل — اشبيلية — الرياض</h3>
+        <span class="prop-score">70.5 / 100</span>
+      </div>
+      <div class="prop-grid">
+        <div class="prop-section">
+          <h4>📍 Property Details</h4>
+          <div>Price: <strong>350,000 SAR</strong></div>
+          <div>Coordinates: 24.805676, 46.799454</div>
+          <div>Category: Shop For Rent</div>
+          <div>Listing: <a class="view-btn" href="#" style="display:inline">View Property</a></div>
+        </div>
+        <div class="prop-section">
+          <h4>🎯 Performance</h4>
+          <div>Traffic: 50.0 km/h</div>
+          <div>Business: 29 nearby</div>
+          <div>Demographics: N/A</div>
+          <div>Competition: 12 pharmacies</div>
+        </div>
+        <div class="prop-section">
+          <h4>📊 Analysis</h4>
+          <div>🚗 Light traffic — smooth access but less exposure.</div>
+          <div>🏪 Weak ecosystem — limited complementary activity.</div>
+          <div>👥 Alignment with demand.</div>
+          <div>☕ Underserved market — opportunity for growth.</div>
+        </div>
+        <div class="prop-section">
+          <div class="map-placeholder" style="height:100%">📍 Site Location Map</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prop-card" id="deep-4">
+      <div class="prop-card-header">
+        <h3>#4 طريق الثمامة — الياسمين — الرياض</h3>
+        <span class="prop-score">69.2 / 100</span>
+      </div>
+      <div class="prop-grid">
+        <div class="prop-section">
+          <h4>📍 Property Details</h4>
+          <div>Price: <strong>633,100 SAR</strong></div>
+          <div>Coordinates: 24.805071, 46.656265</div>
+          <div>Category: Shop For Rent</div>
+          <div>Listing: <a class="view-btn" href="#" style="display:inline">View Property</a></div>
+        </div>
+        <div class="prop-section">
+          <h4>🎯 Performance</h4>
+          <div>Traffic: 50.0 km/h</div>
+          <div>Business: 22 nearby</div>
+          <div>Demographics: N/A</div>
+          <div>Competition: 6 pharmacies</div>
+        </div>
+        <div class="prop-section">
+          <h4>📊 Analysis</h4>
+          <div>🚗 Light traffic — smooth access but less exposure.</div>
+          <div>🏪 Weak ecosystem — limited complementary activity.</div>
+          <div>👥 Alignment with demand.</div>
+          <div>☕ Underserved market — strong entry opportunity.</div>
+        </div>
+        <div class="prop-section">
+          <div class="map-placeholder" style="height:100%">📍 Site Location Map</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prop-card" id="deep-5">
+      <div class="prop-card-header">
+        <h3>#5 عبدالله بن سعود — اشبيلية — الرياض</h3>
+        <span class="prop-score">69.0 / 100</span>
+      </div>
+      <div class="prop-grid">
+        <div class="prop-section">
+          <h4>📍 Property Details</h4>
+          <div>Price: <strong>199,000 SAR</strong></div>
+          <div>Coordinates: 24.738321, 46.690327</div>
+          <div>Category: Shop For Rent</div>
+          <div>Listing: <a class="view-btn" href="#" style="display:inline">View Property</a></div>
+        </div>
+        <div class="prop-section">
+          <h4>🎯 Performance</h4>
+          <div>Traffic: 50.0 km/h</div>
+          <div>Business: 20 nearby</div>
+          <div>Demographics: N/A</div>
+          <div>Competition: 7 pharmacies</div>
+        </div>
+        <div class="prop-section">
+          <h4>📊 Analysis</h4>
+          <div>🚗 Light traffic — smooth access but less exposure.</div>
+          <div>🏪 Weak ecosystem — limited complementary activity.</div>
+          <div>👥 Alignment with demand.</div>
+          <div>☕ Underserved market — strong entry opportunity.</div>
+        </div>
+        <div class="prop-section">
+          <div class="map-placeholder" style="height:100%">📍 Site Location Map</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prop-card" id="deep-6">
+      <div class="prop-card-header">
+        <h3>#6 الملك عبدالعزيز — الصحافة — الرياض</h3>
+        <span class="prop-score">68.7 / 100</span>
+      </div>
+      <div class="prop-grid">
+        <div class="prop-section">
+          <h4>📍 Property Details</h4>
+          <div>Price: <strong>612,000 SAR</strong></div>
+          <div>Coordinates: 24.804417, 46.798141</div>
+          <div>Category: Shop For Rent</div>
+          <div>Listing: <a class="view-btn" href="#" style="display:inline">View Property</a></div>
+        </div>
+        <div class="prop-section">
+          <h4>🎯 Performance</h4>
+          <div>Traffic: 50.0 km/h</div>
+          <div>Business: 29 nearby</div>
+          <div>Demographics: N/A</div>
+          <div>Competition: 11 pharmacies</div>
+        </div>
+        <div class="prop-section">
+          <h4>📊 Analysis</h4>
+          <div>🚗 Light traffic — smooth access but less exposure.</div>
+          <div>🏪 Weak ecosystem — limited complementary activity.</div>
+          <div>👥 Strong alignment with demand.</div>
+          <div>☕ Underserved market — strong entry & growth.</div>
+        </div>
+        <div class="prop-section">
+          <div class="map-placeholder" style="height:100%">📍 Site Location Map</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prop-card" id="deep-7">
+      <div class="prop-card-header">
+        <h3>#7 الأمير سلمان بن محمد — الصحافة — الرياض</h3>
+        <span class="prop-score">67.8 / 100</span>
+      </div>
+      <div class="prop-grid">
+        <div class="prop-section">
+          <h4>📍 Property Details</h4>
+          <div>Price: <strong>169,000 SAR</strong></div>
+          <div>Coordinates: 24.772314, 46.710091</div>
+          <div>Category: Shop For Rent</div>
+          <div>Listing: <a class="view-btn" href="#" style="display:inline">View Property</a></div>
+        </div>
+        <div class="prop-section">
+          <h4>🎯 Performance</h4>
+          <div>Traffic: 50.0 km/h</div>
+          <div>Business: 48 nearby</div>
+          <div>Demographics: N/A</div>
+          <div>Competition: 9 pharmacies</div>
+        </div>
+        <div class="prop-section">
+          <h4>📊 Analysis</h4>
+          <div>🚗 Light traffic — smooth access but less exposure.</div>
+          <div>🏪 Weak ecosystem — limited complementary activity.</div>
+          <div>👥 Strong alignment with demand.</div>
+          <div>☕ Underserved market — strong entry & growth.</div>
+        </div>
+        <div class="prop-section">
+          <div class="map-placeholder" style="height:100%">📍 Site Location Map</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prop-card" id="deep-8">
+      <div class="prop-card-header">
+        <h3>#8 النجاح — اشبيلية — الرياض</h3>
+        <span class="prop-score">67.8 / 100</span>
+      </div>
+      <div class="prop-grid">
+        <div class="prop-section">
+          <h4>📍 Property Details</h4>
+          <div>Price: <strong>50,000 SAR</strong></div>
+          <div>Coordinates: 24.817703, 46.643810</div>
+          <div>Category: Shop For Rent</div>
+          <div>Listing: <a class="view-btn" href="#" style="display:inline">View Property</a></div>
+        </div>
+        <div class="prop-section">
+          <h4>🎯 Performance</h4>
+          <div>Traffic: 50.0 km/h</div>
+          <div>Business: 20 nearby</div>
+          <div>Demographics: N/A</div>
+          <div>Competition: 5 pharmacies</div>
+        </div>
+        <div class="prop-section">
+          <h4>📊 Analysis</h4>
+          <div>🚗 Light traffic — smooth access but less exposure.</div>
+          <div>🏪 Weak ecosystem — limited complementary activity.</div>
+          <div>👥 Strong alignment with demand.</div>
+          <div>☕ Underserved market — strong opportunity.</div>
+        </div>
+        <div class="prop-section">
+          <div class="map-placeholder" style="height:100%">📍 Site Location Map</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prop-card" id="deep-9">
+      <div class="prop-card-header">
+        <h3>#9 طريق عثمان بن عفان الفرعي — الإزدهار — الرياض</h3>
+        <span class="prop-score">67.4 / 100</span>
+      </div>
+      <div class="prop-grid">
+        <div class="prop-section">
+          <h4>📍 Property Details</h4>
+          <div>Price: <strong>250,000 SAR</strong></div>
+          <div>Coordinates: 24.774315, 46.710438</div>
+          <div>Category: Shop For Rent</div>
+          <div>Listing: <a class="view-btn" href="#" style="display:inline">View Property</a></div>
+        </div>
+        <div class="prop-section">
+          <h4>🎯 Performance</h4>
+          <div>Traffic: 50.0 km/h</div>
+          <div>Business: 47 nearby</div>
+          <div>Demographics: N/A</div>
+          <div>Competition: 11 pharmacies</div>
+        </div>
+        <div class="prop-section">
+          <h4>📊 Analysis</h4>
+          <div>🚗 Light traffic — smooth access but less exposure.</div>
+          <div>🏪 Weak ecosystem — limited complementary activity.</div>
+          <div>👥 Alignment with demand.</div>
+          <div>☕ Underserved market — strong opportunity.</div>
+        </div>
+        <div class="prop-section">
+          <div class="map-placeholder" style="height:100%">📍 Site Location Map</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prop-card" id="deep-10">
+      <div class="prop-card-header">
+        <h3>#10 الأمير ناصر بن فرحان آل سعود — الملك سلمان — الرياض</h3>
+        <span class="prop-score">67.2 / 100</span>
+      </div>
+      <div class="prop-grid">
+        <div class="prop-section">
+          <h4>📍 Property Details</h4>
+          <div>Price: <strong>500,000 SAR</strong></div>
+          <div>Coordinates: 24.738888, 46.693546</div>
+          <div>Category: Shop For Rent</div>
+          <div>Listing: <a class="view-btn" href="#" style="display:inline">View Property</a></div>
+        </div>
+        <div class="prop-section">
+          <h4>🎯 Performance</h4>
+          <div>Traffic: 50.0 km/h</div>
+          <div>Business: 22 nearby</div>
+          <div>Demographics: N/A</div>
+          <div>Competition: 8 pharmacies</div>
+        </div>
+        <div class="prop-section">
+          <h4>📊 Analysis</h4>
+          <div>🚗 Light traffic — smooth access but less exposure.</div>
+          <div>🏪 Weak ecosystem — limited complementary activity.</div>
+          <div>👥 Alignment with demand.</div>
+          <div>☕ Underserved market — strong opportunity.</div>
+        </div>
+        <div class="prop-section">
+          <div class="map-placeholder" style="height:100%">📍 Site Location Map</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-brand">Pharmacy Expansion Analysis</div>
+    © Generated October 2024 · All rights reserved
+  </div>
+</main>
+
+<script>
+function togglePanel(btn) {
+  const body = btn.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  if (isOpen) {
+    body.classList.remove('open');
+    body.style.display = 'none';
+    btn.classList.remove('open');
+  } else {
+    body.classList.add('open');
+    body.style.display = 'block';
+    btn.classList.add('open');
+  }
+}
+
+// Smooth scroll for all anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      const offset = 60; // sticky nav height
+      const y = target.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  });
+});
+
+// Active nav link on scroll
+const sections = document.querySelectorAll('[id]');
+const navLinks = document.querySelectorAll('.nav-link');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    if (window.pageYOffset >= section.offsetTop - 80) {
+      current = section.getAttribute('id');
+    }
+  });
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+});
+</script>
+</body>
+</html>
